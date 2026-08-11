@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard - InventoryPro</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-brand">
+            <span class="brand-icon">📦</span>
+            <span class="brand-text">InventoryPro</span>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="dashboard.html" class="active">
+                <span class="nav-icon">📊</span>
+                <span>Dashboard</span>
+            </a>
+            <a href="products.html">
+                <span class="nav-icon">📦</span>
+                <span>Products</span>
+            </a>
+            <a href="suppliers.html">
+                <span class="nav-icon">🏷️</span>
+                <span>Suppliers</span>
+            </a>
+            <a href="inventory.html">
+                <span class="nav-icon">🔄</span>
+                <span>Inventory</span>
+            </a>
+            <a href="reports.html">
+                <span class="nav-icon">📈</span>
+                <span>Reports</span>
+            </a>
+        </nav>
+        <div class="sidebar-footer">
+            <button id="logoutBtn" class="btn btn-outline btn-small">Logout</button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <header class="top-bar">
+            <h1>Dashboard</h1>
+            <div class="top-bar-right">
+                <span class="user-name" id="userName">User</span>
+                <span class="user-avatar">👤</span>
+            </div>
+        </header>
+
+        <!-- Quick Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">📦</div>
+                <div class="stat-info">
+                    <span class="stat-value" id="totalProducts">0</span>
+                    <span class="stat-label">Total Products</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">⚠️</div>
+                <div class="stat-info">
+                    <span class="stat-value" id="lowStockItems">0</span>
+                    <span class="stat-label">Low Stock Items</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🏷️</div>
+                <div class="stat-info">
+                    <span class="stat-value" id="totalSuppliers">0</span>
+                    <span class="stat-label">Total Suppliers</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🔄</div>
+                <div class="stat-info">
+                    <span class="stat-value" id="totalTransactions">0</span>
+                    <span class="stat-label">Transactions</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+            <h2>Quick Actions</h2>
+            <div class="action-grid">
+                <a href="products.html" class="action-card">
+                    <span class="action-icon">➕</span>
+                    <span>Add Product</span>
+                </a>
+                <a href="inventory.html" class="action-card">
+                    <span class="action-icon">📥</span>
+                    <span>Receive Stock</span>
+                </a>
+                <a href="inventory.html" class="action-card">
+                    <span class="action-icon">📤</span>
+                    <span>Dispatch Stock</span>
+                </a>
+                <a href="reports.html" class="action-card">
+                    <span class="action-icon">📊</span>
+                    <span>View Reports</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="recent-activity">
+            <h2>Recent Activity</h2>
+            <div class="activity-list" id="activityList">
+                <p class="no-activity">No recent activity</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>
