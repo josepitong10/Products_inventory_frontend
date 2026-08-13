@@ -1,11 +1,6 @@
-// Supplier Management Logic
+// suppliers.js - Updated with user-specific data
 document.addEventListener('DOMContentLoaded', () => {
-    // Check if user is logged in
-    if (!api.isLoggedIn()) {
-        window.location.href = 'login.html';
-        return;
-    }
-    
+    if (typeof initAuthenticatedPage === 'function' && !initAuthenticatedPage()) return;
     loadSuppliers();
     setupSupplierModal();
     setupSearchFilter();
@@ -18,7 +13,7 @@ async function loadSuppliers() {
     if (!tbody) return;
 
     try {
-        const data = await api.getSuppliers();
+        const data = await api.getSuppliers(); // Now returns only user's suppliers
         currentSuppliers = Array.isArray(data) ? data : [];
         
         if (currentSuppliers.length === 0) {
@@ -45,6 +40,8 @@ async function loadSuppliers() {
         tbody.innerHTML = '<tr><td colspan="7" class="text-center text-danger">Failed to load suppliers</td></tr>';
     }
 }
+
+// ... rest of the functions remain the same but use api methods that now include userId
 
 function setupSupplierModal() {
     const modal = document.getElementById('supplierModal');

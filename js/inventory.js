@@ -1,11 +1,6 @@
-// Inventory Management Logic
+// inventory.js - Updated with user-specific data
 document.addEventListener('DOMContentLoaded', () => {
-    // Check if user is logged in
-    if (!api.isLoggedIn()) {
-        window.location.href = 'login.html';
-        return;
-    }
-    
+    if (typeof initAuthenticatedPage === 'function' && !initAuthenticatedPage()) return;
     loadProductsForSelect();
     loadTransactions();
     setupTransactionForm();
@@ -16,7 +11,7 @@ async function loadProductsForSelect() {
     if (!select) return;
 
     try {
-        const products = await api.getProducts();
+        const products = await api.getProducts(); // Now returns only user's products
         
         select.innerHTML = `
             <option value="">Select a product</option>
@@ -34,7 +29,7 @@ async function loadTransactions() {
     if (!tbody) return;
 
     try {
-        const transactions = await api.getTransactions();
+        const transactions = await api.getTransactions(); // Now returns only user's transactions
         
         if (!transactions || transactions.length === 0) {
             tbody.innerHTML = '<tr><td colspan="6" class="text-center">No transactions found</td></tr>';
@@ -45,11 +40,9 @@ async function loadTransactions() {
             <tr>
                 <td>${transaction.id}</td>
                 <td>${transaction.productName || transaction.product_name || transaction.productId}</td>
-                <td>
-                    <span class="status-badge ${transaction.type === 'in' ? 'in-stock' : 'out-of-stock'}">
-                        ${transaction.type === 'in' ? '📥 Stock In' : '📤 Stock Out'}
-                    </span>
-                </td>
+                <td><span class="status-badge ${transaction.type === 'in' ? 'in-stock' : 'out-of-stock'}">
+                    ${transaction.type === 'in' ? '📥 Stock In' : '📤 Stock Out'}
+                </span></td>
                 <td>${transaction.quantity}</td>
                 <td>${new Date(transaction.timestamp).toLocaleString()}</td>
                 <td>${transaction.note || '-'}</td>
@@ -78,15 +71,8 @@ function setupTransactionForm() {
             return;
         }
 
-        const transactionData = {
-            productId: productId,
-            type: type,
-            quantity: quantity,
-            note: note
-        };
-
         try {
-            await api.createTransaction(transactionData);
+            await api.createTransaction({ productId, type, quantity, note });
             showToast('Transaction recorded successfully!', 'success');
             form.reset();
             document.getElementById('transactionProduct').value = '';

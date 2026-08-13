@@ -1,11 +1,6 @@
-// Reports Logic
+// reports.js - Updated with user-specific data
 document.addEventListener('DOMContentLoaded', () => {
-    // Check if user is logged in
-    if (!api.isLoggedIn()) {
-        window.location.href = 'login.html';
-        return;
-    }
-    
+    if (typeof initAuthenticatedPage === 'function' && !initAuthenticatedPage()) return;
     loadLowStockItems();
     loadRecentReports();
     setupRefreshButton();
@@ -16,7 +11,7 @@ async function loadLowStockItems() {
     if (!tbody) return;
 
     try {
-        const items = await api.getLowStockItems();
+        const items = await api.getLowStockItems(); // Now returns only user's items
         
         if (!items || items.length === 0) {
             tbody.innerHTML = '<tr><td colspan="5" class="text-center">No low stock items found</td></tr>';
@@ -29,11 +24,9 @@ async function loadLowStockItems() {
                 <td>${item.sku}</td>
                 <td>${item.quantity}</td>
                 <td>${item.lowStockThreshold || item.low_stock_threshold || 5}</td>
-                <td>
-                    <span class="status-badge ${item.quantity <= 0 ? 'out-of-stock' : 'low-stock'}">
-                        ${item.quantity <= 0 ? '⚠️ Out of Stock' : '⚠️ Low Stock'}
-                    </span>
-                </td>
+                <td><span class="status-badge ${item.quantity <= 0 ? 'out-of-stock' : 'low-stock'}">
+                    ${item.quantity <= 0 ? '⚠️ Out of Stock' : '⚠️ Low Stock'}
+                </span></td>
             </tr>
         `).join('');
     } catch (error) {
@@ -47,7 +40,7 @@ async function loadRecentReports() {
     if (!container) return;
 
     try {
-        const reports = await api.getRecentReports();
+        const reports = await api.getRecentReports(); // Now returns only user's reports
         
         if (!reports || reports.length === 0) {
             container.innerHTML = '<p class="no-reports">No reports generated yet</p>';

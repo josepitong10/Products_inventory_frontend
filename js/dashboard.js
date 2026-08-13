@@ -1,57 +1,95 @@
-// Dashboard Logic
 document.addEventListener('DOMContentLoaded', async () => {
-    // Check if user is logged in
-    if (!api.isLoggedIn()) {
+
+    // ==========================================
+    // CHECK AUTHENTICATION FIRST
+    // ==========================================
+    const token = api.getToken();
+    const user = api.getCurrentUser();
+
+    if (!token || !user || !user.id) {
+        console.warn('User is not authenticated.');
+        api.clearAuth();
         window.location.href = 'login.html';
         return;
     }
-    
-    await loadDashboardStats();
-    await loadRecentActivity();
+
+    console.log('Logged-in user:', user);
+
+    // ==========================================
+    // LOAD PRIVATE DASHBOARD
+    // ==========================================
+    try {
+        await loadDashboardStats();
+    } catch (error) {
+        console.error('Dashboard error:', error);
+
+        if (error.message === 'Authentication expired' ||
+            error.message === 'User not authenticated') {
+            return;
+        }
+
+        showToast(
+            error.message || 'Failed to load dashboard',
+            'error'
+        );
+    }
 });
+
 
 async function loadDashboardStats() {
     try {
         const stats = await api.getDashboardStats();
-        console.log('Dashboard stats:', stats);
-        
-        document.getElementById('totalProducts').textContent = stats.totalProducts || stats.total_products || 0;
-        document.getElementById('lowStockItems').textContent = stats.lowStockItems || stats.low_stock_items || 0;
-        document.getElementById('totalSuppliers').textContent = stats.totalSuppliers || stats.total_suppliers || 0;
-        document.getElementById('totalTransactions').textContent = stats.totalTransactions || stats.total_transactions || 0;
-    } catch (error) {
-        console.error('Failed to load dashboard stats:', error);
-        // Set default values
-        document.getElementById('totalProducts').textContent = '0';
-        document.getElementById('lowStockItems').textContent = '0';
-        document.getElementById('totalSuppliers').textContent = '0';
-        document.getElementById('totalTransactions').textContent = '0';
-    }
-}
 
-async function loadRecentActivity() {
-    const activityList = document.getElementById('activityList');
-    if (!activityList) return;
+        console.log('Private Dashboard Stats:', stats);
 
-    try {
-        const activities = await api.getRecentReports();
-        console.log('Recent activities:', activities);
-        
-        if (activities && activities.length > 0) {
-            activityList.innerHTML = activities.map(activity => `
-                <div class="activity-item">
-                    <div class="activity-icon">${activity.icon || '📝'}</div>
-                    <div class="activity-content">
-                        <p class="activity-text">${activity.title || activity.message}</p>
-                        <span class="activity-time">${new Date(activity.timestamp).toLocaleString()}</span>
-                    </div>
-                </div>
-            `).join('');
-        } else {
-            activityList.innerHTML = '<p class="no-activity">No recent activity</p>';
+        // ==========================================
+        // UPDATE DASHBOARD CARDS
+        // ==========================================
+
+        const totalProducts =
+            document.getElementById('totalProducts');
+
+        const totalCategories =
+            document.getElementById('totalCategories');
+
+        const totalSuppliers =
+            document.getElementById('totalSuppliers');
+
+        const lowStockItems =
+            document.getElementById('lowStockItems');
+
+        if (totalProducts) {
+            totalProducts.textContent =
+                stats.totalProducts || 0;
         }
+
+        if (totalCategories) {
+            totalCategories.textContent =
+                stats.totalCategories || 0;
+        }
+
+        if (totalSuppliers) {
+            totalSuppliers.textContent =
+                stats.totalSuppliers || 0;
+        }
+
+        if (lowStockItems) {
+            lowStockItems.textContent =
+                stats.lowStockItems || 0;
+        }
+
+        // ==========================================
+        // RECENT TRANSACTIONS
+        // ==========================================
+
+        if (stats.recentTransactions) {
+            displayRecentTransactions(
+                stats.recentTransactions
+            );
+        }
+
     } catch (error) {
-        console.error('Failed to load recent activity:', error);
-        activityList.innerHTML = '<p class="no-activity">No recent activity</p>';
+        console.error('Failed to load dashboard:', error);
+        throw error;
     }
 }

@@ -162,7 +162,30 @@
             </div>
         </div>
     </footer>
-
+    
+    
     <script src="js/api.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.api && api.isLoggedIn()) {
+                const navLinks = document.querySelector('.nav-links');
+                if (navLinks) {
+                    navLinks.innerHTML = `
+                        <a href="#features">Features</a>
+                        <a href="#about">About</a>
+                        <a href="dashboard.html" class="btn btn-outline">Dashboard</a>
+                        <button class="btn btn-primary" onclick="api.logout()">Logout</button>
+                    `;
+                }
+                const heroButtons = document.querySelector('.hero-buttons');
+                if (heroButtons) {
+                    heroButtons.innerHTML = `
+                        <a href="dashboard.html" class="btn btn-primary btn-large">Go to Dashboard</a>
+                        <a href="register.html" class="btn btn-outline btn-large">Register New Account</a>
+                    `;
+                }
+            }
+        });
+    </script>
 </body>
 </html>
