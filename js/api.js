@@ -257,32 +257,55 @@ async getDashboardStats() {
         });
     },
 
-    async getTransactions() {
-        const userId = this.getCurrentUserId();
-        if (!userId) throw new Error('User not authenticated');
-        
-        const response = await this.request(`/transactions?userId=${userId}`);
-        return response.data || response.transactions || (Array.isArray(response) ? response : []);
-    },
+async getTransactions() {
+
+    if (!this.isLoggedIn()) {
+        this.clearAuth();
+        window.location.href = 'login.html';
+        throw new Error('User not authenticated');
+    }
+
+    const response = await this.request('/inventory/history', {
+        method: 'GET'
+    });
+
+    return response.data ||
+           response.transactions ||
+           (Array.isArray(response) ? response : []);
+},
 
     async getTransaction(id) {
         const userId = this.getCurrentUserId();
         if (!userId) throw new Error('User not authenticated');
         
-        const response = await this.request(`/transactions/${id}?userId=${userId}`);
+        const response = await this.request(`/inventory/${id}?userId=${userId}`);
         return response.data || response;
     },
 
-    async createTransaction(transaction) {
-        const userId = this.getCurrentUserId();
-        if (!userId) throw new Error('User not authenticated');
-        
-        const response = await this.request('/transactions', {
-            method: 'POST',
-            body: JSON.stringify({ ...transaction, userId }),
-        });
-        return response.data || response;
-    },
+async createTransaction(transaction) {
+
+    if (!this.isLoggedIn()) {
+        this.clearAuth();
+        window.location.href = 'login.html';
+        throw new Error('User not authenticated');
+    }
+
+    const endpoint =
+        transaction.type === 'in'
+            ? '/inventory/stock-in'
+            : '/inventory/stock-out';
+
+    const response = await this.request(endpoint, {
+        method: 'POST',
+        body: JSON.stringify({
+            productId: transaction.productId,
+            quantity: transaction.quantity,
+            note: transaction.note || ''
+        })
+    });
+
+    return response.data || response;
+},
 
     async getLowStockItems() {
         const userId = this.getCurrentUserId();

@@ -24,7 +24,7 @@ async function loadSuppliers() {
         tbody.innerHTML = currentSuppliers.map(supplier => `
             <tr>
                 <td>${supplier.id}</td>
-                <td><strong>${supplier.name}</strong></td>
+                <td><strong>${supplier.supplier_name}</strong></td>
                 <td>${supplier.contactPerson || supplier.contact_person || '-'}</td>
                 <td><a href="mailto:${supplier.email}">${supplier.email}</a></td>
                 <td>${supplier.phone || '-'}</td>
@@ -41,7 +41,7 @@ async function loadSuppliers() {
     }
 }
 
-// ... rest of the functions remain the same but use api methods that now include userId
+
 
 function setupSupplierModal() {
     const modal = document.getElementById('supplierModal');
@@ -75,8 +75,8 @@ function setupSupplierModal() {
         
         const id = document.getElementById('supplierId').value;
         const supplierData = {
-            name: document.getElementById('supplierName').value,
-            contactPerson: document.getElementById('supplierContact').value,
+            supplier_name: document.getElementById('supplierName').value,
+            contact_person: document.getElementById('supplierContact').value,
             email: document.getElementById('supplierEmail').value,
             phone: document.getElementById('supplierPhone').value,
             address: document.getElementById('supplierAddress').value,
@@ -125,7 +125,7 @@ window.editSupplier = async function(id) {
         const modal = document.getElementById('supplierModal');
         document.getElementById('modalTitle').textContent = 'Edit Supplier';
         document.getElementById('supplierId').value = supplier.id;
-        document.getElementById('supplierName').value = supplier.name;
+        document.getElementById('supplierName').value = supplier.supplier_name;
         document.getElementById('supplierContact').value = supplier.contactPerson || supplier.contact_person || '';
         document.getElementById('supplierEmail').value = supplier.email;
         document.getElementById('supplierPhone').value = supplier.phone || '';
