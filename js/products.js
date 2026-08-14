@@ -6,44 +6,23 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     try {
 
-        // ===============================
-        // CHECK AUTHENTICATION
-        // ===============================
-
         const token = api.getToken();
         const user = api.getCurrentUser();
 
         if (!token || !user || !user.id) {
-
             api.clearAuth();
-
             window.location.href = 'login.html';
-
             return;
         }
 
         console.log('Logged-in user:', user);
 
-
-        // ===============================
-        // LOAD DATA
-        // ===============================
-
         await loadCategories();
-
         await loadSuppliers();
-
         await loadProducts();
 
-
-        // ===============================
-        // SETUP UI
-        // ===============================
-
         setupProductModal();
-
         setupSearchFilter();
-
         setupRefreshButton();
 
     } catch (error) {
@@ -54,7 +33,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         );
 
         if (typeof showToast === 'function') {
-
             showToast(
                 error.message ||
                 'Unable to load products',
@@ -66,8 +44,69 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
 // ============================================
-// CURRENT PRODUCTS
+// PRODUCT SEARCH
 // ============================================
+
+function setupSearchFilter() {
+
+    const searchInput =
+        document.getElementById('searchProduct');
+
+    if (!searchInput) {
+        return;
+    }
+
+    searchInput.addEventListener('input', (e) => {
+
+        const query =
+            e.target.value.toLowerCase().trim();
+
+        const rows =
+            document.querySelectorAll(
+                '#productsTableBody tr'
+            );
+
+        rows.forEach(row => {
+
+            const text =
+                row.textContent.toLowerCase();
+
+            row.style.display =
+                text.includes(query)
+                    ? ''
+                    : 'none';
+        });
+    });
+}
+
+// ============================================
+// REFRESH BUTTON FUNCTION
+// ============================================
+
+function setupRefreshButton() {
+    const refreshButton =
+        document.getElementById('refreshProducts');
+
+    if (!refreshButton) return;
+
+    refreshButton.addEventListener('click', async () => {
+        try {
+            await loadProducts();
+        } catch (error) {
+            console.error('Failed to refresh products:', error);
+
+            if (typeof showToast === 'function') {
+                showToast(
+                    error.message || 'Failed to refresh products',
+                    'error'
+                );
+            }
+        }
+    });
+}
+
+
+
 
 let currentProducts = [];
 

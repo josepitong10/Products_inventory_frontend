@@ -170,25 +170,40 @@ async getDashboardStats() {
 
     return response.data || response;
 },
-    async updateProduct(id, product) {
-        const userId = this.getCurrentUserId();
-        if (!userId) throw new Error('User not authenticated');
-        
-        const response = await this.request(`/products`, {
-            method: 'PUT',
-            body: JSON.stringify({ ...product, userId }),
-        });
-        return response.data || response;
-    },
 
-    async deleteProduct(id) {
-        const userId = this.getCurrentUserId();
-        if (!userId) throw new Error('User not authenticated');
-        
-        return await this.request(`/products`, {
-            method: 'DELETE',
-        });
-    },
+async updateProduct(id, product) {
+    const userId = this.getCurrentUserId();
+
+    if (!userId) {
+        throw new Error('User not authenticated');
+    }
+
+    if (!id) {
+        throw new Error('Product ID is required');
+    }
+
+    const response = await this.request(`/products/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify(product)
+    });
+
+    return response.data || response;
+},
+
+
+async deleteProduct(id) {
+    const userId = this.getCurrentUserId();
+
+    if (!userId) {
+        throw new Error('User not authenticated');
+    }
+
+    return await this.request(`/products/${id}`, {
+        method: 'DELETE'
+    });
+},
+
+
 
     async getCategories() {
     const userId = this.getCurrentUserId();
@@ -241,7 +256,7 @@ async getDashboardStats() {
         const userId = this.getCurrentUserId();
         if (!userId) throw new Error('User not authenticated');
         
-        const response = await this.request(`/suppliers/${id}?userId=${userId}`, {
+        const response = await this.request(`/suppliers`, {
             method: 'PUT',
             body: JSON.stringify({ ...supplier, userId }),
         });
@@ -252,16 +267,16 @@ async getDashboardStats() {
         const userId = this.getCurrentUserId();
         if (!userId) throw new Error('User not authenticated');
         
-        return await this.request(`/suppliers/${id}?userId=${userId}`, {
+        return await this.request(`/suppliers`, {
             method: 'DELETE',
         });
     },
 
 async getTransactions() {
 
-    if (!this.isLoggedIn()) {
-        this.clearAuth();
-        window.location.href = 'login.html';
+    const userId = this.getCurrentUserId();
+
+    if (!userId) {
         throw new Error('User not authenticated');
     }
 
@@ -274,19 +289,11 @@ async getTransactions() {
            (Array.isArray(response) ? response : []);
 },
 
-    async getTransaction(id) {
-        const userId = this.getCurrentUserId();
-        if (!userId) throw new Error('User not authenticated');
-        
-        const response = await this.request(`/inventory/${id}?userId=${userId}`);
-        return response.data || response;
-    },
-
 async createTransaction(transaction) {
 
-    if (!this.isLoggedIn()) {
-        this.clearAuth();
-        window.location.href = 'login.html';
+    const userId = this.getCurrentUserId();
+
+    if (!userId) {
         throw new Error('User not authenticated');
     }
 
@@ -298,30 +305,44 @@ async createTransaction(transaction) {
     const response = await this.request(endpoint, {
         method: 'POST',
         body: JSON.stringify({
-            productId: transaction.productId,
+            product_id: transaction.productId,
             quantity: transaction.quantity,
-            note: transaction.note || ''
+            notes: transaction.note || ''
         })
     });
 
     return response.data || response;
 },
 
-    async getLowStockItems() {
-        const userId = this.getCurrentUserId();
-        if (!userId) throw new Error('User not authenticated');
-        
-        const response = await this.request(`/reports/low-stock?userId=${userId}`);
-        return response.data || response.items || (Array.isArray(response) ? response : []);
-    },
+  async getLowStockItems() {
+    const userId = this.getCurrentUserId();
 
-    async getRecentReports() {
-        const userId = this.getCurrentUserId();
-        if (!userId) throw new Error('User not authenticated');
-        
-        const response = await this.request(`/reports/recent?userId=${userId}`);
-        return response.data || response.reports || (Array.isArray(response) ? response : []);
-    },
+    if (!userId) {
+        throw new Error('User not authenticated');
+    }
+
+    const response = await this.request('/inventory/low-stock', {
+        method: 'GET'
+    });
+
+    return response.data ||
+           response.items ||
+           [];
+},
+
+async getRecentReports() {
+    const userId = this.getCurrentUserId();
+
+    if (!userId) {
+        throw new Error('User not authenticated');
+    }
+
+    const response = await this.request('/inventory/summary', {
+        method: 'GET'
+    });
+
+    return response.data || [];
+},
 
     getUserRole() {
         const user = this.getCurrentUser();

@@ -6,23 +6,46 @@ document.addEventListener('DOMContentLoaded', () => {
     setupTransactionForm();
 });
 
+
 async function loadProductsForSelect() {
     const select = document.getElementById('transactionProduct');
+
     if (!select) return;
 
     try {
-        const products = await api.getProducts(); // Now returns only user's products
-        
+        const products = await api.getProducts();
+
+        console.log('Products for transaction:', products);
+
+        if (!products || products.length === 0) {
+            select.innerHTML = `
+                <option value="">No products available</option>
+            `;
+            return;
+        }
+
         select.innerHTML = `
             <option value="">Select a product</option>
             ${products.map(p => `
-                <option value="${p.id}">${p.name} (${p.sku}) - Stock: ${p.quantity}</option>
+                <option value="${p.id}">
+                    ${p.product_name} - Stock: ${p.quantity}
+                </option>
             `).join('')}
         `;
+
     } catch (error) {
-        console.error('Failed to load products for select:', error);
+        console.error(
+            'Failed to load products for select:',
+            error
+        );
+
+        select.innerHTML = `
+            <option value="">Failed to load products</option>
+        `;
     }
 }
+
+
 
 async function loadTransactions() {
     const tbody = document.getElementById('transactionsTableBody');

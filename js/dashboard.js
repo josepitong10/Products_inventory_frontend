@@ -78,15 +78,6 @@ async function loadDashboardStats() {
                 stats.lowStockItems || 0;
         }
 
-        // ==========================================
-        // RECENT TRANSACTIONS
-        // ==========================================
-
-        if (stats.recentTransactions) {
-            displayRecentTransactions(
-                stats.recentTransactions
-            );
-        }
 
     } catch (error) {
         console.error('Failed to load dashboard:', error);
