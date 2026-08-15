@@ -552,6 +552,148 @@ a {
     font-size: 2rem;
 }
 
+/* ============================================
+   ADD PRODUCT / ADD SUPPLIER FORM STYLING
+   ============================================ */
+
+.modal-content {
+    max-width: 520px;
+    padding: 2rem;
+}
+
+/* Form groups */
+.modal-content .form-group {
+    margin-bottom: 1.25rem;
+}
+
+/* Labels */
+.modal-content .form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #334155;
+}
+
+/* Text fields */
+.modal-content .form-group input,
+.modal-content .form-group select,
+.modal-content .form-group textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #1e293b;
+    font-family: inherit;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+}
+
+/* Placeholder */
+.modal-content .form-group input::placeholder,
+.modal-content .form-group textarea::placeholder {
+    color: #94a3b8;
+}
+
+/* Focus effect */
+.modal-content .form-group input:focus,
+.modal-content .form-group select:focus,
+.modal-content .form-group textarea:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* Hover effect */
+.modal-content .form-group input:hover,
+.modal-content .form-group select:hover,
+.modal-content .form-group textarea:hover {
+    border-color: #94a3b8;
+}
+
+/* Textarea */
+.modal-content .form-group textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+/* Number inputs */
+.modal-content input[type="number"] {
+    appearance: textfield;
+}
+
+/* Modal buttons */
+.modal-content .modal-actions {
+    margin-top: 1.75rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e2e8f0;
+}
+
+/* Disabled fields */
+.modal-content input:disabled,
+.modal-content select:disabled {
+    background: #f1f5f9;
+    color: #64748b;
+    cursor: not-allowed;
+}
+
+/* ============================================
+   PRODUCT FORM
+   ============================================ */
+
+#productModal .modal-content {
+    max-width: 550px;
+}
+
+#productModal #productName,
+#productModal #productCategory,
+#productModal #productSupplier,
+#productModal #productPrice,
+#productModal #productStock,
+#productModal #productLowStock,
+#productModal #productDescription {
+    box-shadow: none;
+}
+
+/* ============================================
+   SUPPLIER FORM
+   ============================================ */
+
+#supplierModal .modal-content {
+    max-width: 520px;
+}
+
+#supplierModal #supplierName,
+#supplierModal #supplierContact,
+#supplierModal #supplierEmail,
+#supplierModal #supplierPhone,
+#supplierModal #supplierAddress {
+    box-shadow: none;
+}
+
+/* ============================================
+   MOBILE
+   ============================================ */
+
+@media (max-width: 600px) {
+
+    .modal-content {
+        width: 95%;
+        padding: 1.5rem;
+    }
+
+    .modal-actions {
+        flex-direction: column-reverse;
+    }
+
+    .modal-actions .btn {
+        width: 100%;
+    }
+}
+
+
+
 /* Stats Grid */
 .stats-grid {
     display: grid;

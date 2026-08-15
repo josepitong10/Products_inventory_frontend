@@ -47,38 +47,44 @@ async function loadDashboardStats() {
         // ==========================================
 
         const totalProducts =
-            document.getElementById('totalProducts');
+    document.getElementById('totalProducts');
 
-        const totalCategories =
-            document.getElementById('totalCategories');
+const totalCategories =
+    document.getElementById('totalCategories');
 
-        const totalSuppliers =
-            document.getElementById('totalSuppliers');
+const totalSuppliers =
+    document.getElementById('totalSuppliers');
 
-        const lowStockItems =
-            document.getElementById('lowStockItems');
+const lowStockItems =
+    document.getElementById('lowStockItems');
 
-        if (totalProducts) {
-            totalProducts.textContent =
-                stats.totalProducts || 0;
-        }
+const totalTransactions =
+    document.getElementById('totalTransactions');
 
-        if (totalCategories) {
-            totalCategories.textContent =
-                stats.totalCategories || 0;
-        }
+if (totalProducts) {
+    totalProducts.textContent =
+        stats.totalProducts || 0;
+}
 
-        if (totalSuppliers) {
-            totalSuppliers.textContent =
-                stats.totalSuppliers || 0;
-        }
+if (totalCategories) {
+    totalCategories.textContent =
+        stats.totalCategories || 0;
+}
 
-        if (lowStockItems) {
-            lowStockItems.textContent =
-                stats.lowStockItems || 0;
-        }
+if (totalSuppliers) {
+    totalSuppliers.textContent =
+        stats.totalSuppliers || 0;
+}
 
+if (lowStockItems) {
+    lowStockItems.textContent =
+        stats.lowStockItems || 0;
+}
 
+if (totalTransactions) {
+    totalTransactions.textContent =
+        stats.totalTransactions || 0;
+}
     } catch (error) {
         console.error('Failed to load dashboard:', error);
         throw error;

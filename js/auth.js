@@ -72,16 +72,21 @@ async function handleLogin(event) {
     }
 }
 
+
 async function handleRegister(event) {
     event.preventDefault();
 
-    const nameInput = document.getElementById('fullName') || document.getElementById('fullname');
+    const nameInput =
+        document.getElementById('fullName') ||
+        document.getElementById('fullname');
+
     const emailInput = document.getElementById('email');
     const passwordInput = document.getElementById('password');
-    const confirmPasswordInput = document.getElementById('confirmPassword');
+    const confirmPasswordInput =
+        document.getElementById('confirmPassword');
 
     if (!nameInput || !emailInput || !passwordInput) {
-        if (typeof showToast === 'function') showToast('Please fill in all required fields', 'error');
+        showToast('Please fill in all required fields', 'error');
         return;
     }
 
@@ -89,46 +94,56 @@ async function handleRegister(event) {
     const email = emailInput.value.trim();
     const password = passwordInput.value;
 
-    if (confirmPasswordInput && confirmPasswordInput.value !== password) {
-        if (typeof showToast === 'function') {
-            showToast('Passwords do not match', 'error');
-        } else {
-            alert('Passwords do not match');
-        }
+    if (
+        confirmPasswordInput &&
+        confirmPasswordInput.value !== password
+    ) {
+        showToast('Passwords do not match', 'error');
         return;
     }
 
-    const errorElement = document.getElementById('registerError');
-    if (errorElement) errorElement.textContent = '';
-
     try {
-        const result = await api.register(fullname, email, password);
+        const result = await api.register(
+            fullname,
+            email,
+            password
+        );
 
-        if (result && result.success === false) {
-            throw new Error(result.message || 'Registration failed');
+        console.log('Register response:', result);
+
+        // IMPORTANT:
+        // Only redirect if registration was successful
+        if (result && result.success === true) {
+
+            showToast(
+                'Registration successful! Redirecting to login...',
+                'success'
+            );
+
+            setTimeout(() => {
+                window.location.href = 'login.html';
+            }, 1500);
+
+            return;
         }
 
-        if (typeof showToast === 'function') {
-            showToast('Registration successful! Redirecting to login...', 'success');
-        } else {
-            alert('Registration successful. Please login.');
-        }
-
-        setTimeout(() => {
-            window.location.href = 'login.html';
-        }, 1500);
+        // Backend did not report success
+        showToast(
+            result?.message || 'Registration failed',
+            'error'
+        );
 
     } catch (error) {
-        console.error('Registration error:', error);
-        const msg = error.message || 'Unable to register';
 
-        if (errorElement) {
-            errorElement.textContent = msg;
-        } else if (typeof showToast === 'function') {
-            showToast(msg, 'error');
-        }
+        console.error('Registration error:', error);
+
+        showToast(
+            error.message || 'Unable to register',
+            'error'
+        );
     }
 }
+
 
 // Add this to auth.js to check session validity
 async function validateSession() {

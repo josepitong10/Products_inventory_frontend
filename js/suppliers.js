@@ -114,26 +114,52 @@ function setupSearchFilter() {
 }
 
 // Global functions
-window.editSupplier = async function(id) {
+window.editSupplier = async function(id) {window.editSupplier = async function(id) {
     try {
+        console.log('Editing supplier ID:', id);
+
         const supplier = await api.getSupplier(id);
+
+        console.log('Supplier returned from API:', supplier);
+
         if (!supplier) {
             showToast('Supplier not found', 'error');
             return;
         }
 
         const modal = document.getElementById('supplierModal');
+
         document.getElementById('modalTitle').textContent = 'Edit Supplier';
-        document.getElementById('supplierId').value = supplier.id;
-        document.getElementById('supplierName').value = supplier.supplier_name;
-        document.getElementById('supplierContact').value = supplier.contactPerson || supplier.contact_person || '';
-        document.getElementById('supplierEmail').value = supplier.email;
-        document.getElementById('supplierPhone').value = supplier.phone || '';
-        document.getElementById('supplierAddress').value = supplier.address || '';
-        
+
+        document.getElementById('supplierId').value = supplier.id || id;
+
+        document.getElementById('supplierName').value =
+            supplier.supplier_name || '';
+
+        document.getElementById('supplierContact').value =
+            supplier.contact_person ||
+            supplier.contactPerson ||
+            '';
+
+        document.getElementById('supplierEmail').value =
+            supplier.email || '';
+
+        document.getElementById('supplierPhone').value =
+            supplier.phone || '';
+
+        document.getElementById('supplierAddress').value =
+            supplier.address || '';
+
         modal.classList.add('active');
+
     } catch (error) {
-        showToast('Failed to load supplier data', 'error');
+
+        console.error('Edit supplier error:', error);
+
+        showToast(
+            error.message || 'Failed to load supplier data',
+            'error'
+        );
     }
 };
 
@@ -148,3 +174,4 @@ window.deleteSupplier = async function(id) {
         showToast('Failed to delete supplier', 'error');
     }
 };
+}

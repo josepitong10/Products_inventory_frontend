@@ -223,6 +223,7 @@ async function loadProducts() {
 
                             <button
                                 onclick="editProduct(${product.id})"
+             
                                 class="btn btn-outline btn-small">
                                 ✏️
                             </button>
@@ -780,22 +781,42 @@ window.editProduct = async function(id) {
 
         document.getElementById('modalTitle').textContent = 'Edit Product';
         document.getElementById('productId').value = product.id;
-        document.getElementById('productName').value = product.product_name || '';
-        
-        // Set the TEXT values (names)
-        document.getElementById('productCategory').value = product.category_name || '';
-        document.getElementById('productSupplier').value = product.supplier_name || '';
-        
-        document.getElementById('productPrice').value = product.price || 0;
-        document.getElementById('productStock').value = product.quantity || 0;
-        document.getElementById('productLowStock').value = product.minimum_stock || 5;
-        document.getElementById('productDescription').value = product.description || '';
+        document.getElementById('productName').value =
+            product.product_name || '';
 
-        document.getElementById('productModal').classList.add('active');
+        document.getElementById('productCategory').value =
+            product.category_name || '';
+
+        const supplierInput =
+            document.getElementById('productSupplier');
+
+        supplierInput.value =
+            product.supplier_name || '';
+
+        // Supplier cannot be edited
+        supplierInput.disabled = true;
+
+        document.getElementById('productPrice').value =
+            product.price || 0;
+
+        document.getElementById('productStock').value =
+            product.quantity || 0;
+
+        document.getElementById('productLowStock').value =
+            product.minimum_stock || 5;
+
+        document.getElementById('productDescription').value =
+            product.description || '';
+
+        document.getElementById('productModal')
+            .classList.add('active');
 
     } catch (error) {
         console.error('Edit product error:', error);
-        showToast(error.message || 'Failed to load product data', 'error');
+        showToast(
+            error.message || 'Failed to load product data',
+            'error'
+        );
     }
 };
 

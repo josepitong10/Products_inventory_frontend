@@ -148,14 +148,23 @@ async getDashboardStats() {
         return response.data || response.products || (Array.isArray(response) ? response : []);
     },
 
-    async getProduct(id) {
-        const userId = this.getCurrentUserId();
-        if (!userId) throw new Error('User not authenticated');
-        
-        const response = await this.request(`/products`);
-        return response.data || response;
-    },
+async getProduct(id) {
+    const userId = this.getCurrentUserId();
 
+    if (!userId) {
+        throw new Error('User not authenticated');
+    }
+
+    if (!id) {
+        throw new Error('Product ID is required');
+    }
+
+    const response = await this.request(`/products/${id}`, {
+        method: 'GET'
+    });
+
+    return response.data || response;
+},
   async createProduct(product) {
     const userId = this.getCurrentUserId();
 
@@ -223,7 +232,7 @@ async deleteProduct(id) {
            (Array.isArray(response) ? response : []);
 },
 
- async getSuppliers() {
+async getSuppliers() {
     const userId = this.getCurrentUserId();
 
     if (!this.isLoggedIn() || !userId) {
@@ -241,36 +250,83 @@ async deleteProduct(id) {
            (Array.isArray(response) ? response : []);
 },
 
-    async createSupplier(supplier) {
-        const userId = this.getCurrentUserId();
-        if (!userId) throw new Error('User not authenticated');
-        
-        const response = await this.request('/suppliers', {
-            method: 'POST',
-            body: JSON.stringify({ ...supplier, userId }),
-        });
-        return response.data || response;
-    },
+async getSupplier(id) {
+    const userId = this.getCurrentUserId();
 
-    async updateSupplier(id, supplier) {
-        const userId = this.getCurrentUserId();
-        if (!userId) throw new Error('User not authenticated');
-        
-        const response = await this.request(`/suppliers`, {
-            method: 'PUT',
-            body: JSON.stringify({ ...supplier, userId }),
-        });
-        return response.data || response;
-    },
+    if (!this.isLoggedIn() || !userId) {
+        this.clearAuth();
+        window.location.href = 'login.html';
+        throw new Error('User not authenticated');
+    }
 
-    async deleteSupplier(id) {
-        const userId = this.getCurrentUserId();
-        if (!userId) throw new Error('User not authenticated');
-        
-        return await this.request(`/suppliers`, {
-            method: 'DELETE',
-        });
-    },
+    if (!id) {
+        throw new Error('Supplier ID is required');
+    }
+
+    const response = await this.request(`/suppliers/${id}`, {
+        method: 'GET'
+    });
+
+    return response.data || response;
+},
+
+async createSupplier(supplier) {
+    const userId = this.getCurrentUserId();
+
+    if (!userId) {
+        throw new Error('User not authenticated');
+    }
+
+    const response = await this.request('/suppliers', {
+        method: 'POST',
+        body: JSON.stringify({
+            ...supplier,
+            userId
+        })
+    });
+
+    return response.data || response;
+},
+
+async updateSupplier(id, supplier) {
+    const userId = this.getCurrentUserId();
+
+    if (!userId) {
+        throw new Error('User not authenticated');
+    }
+
+    if (!id) {
+        throw new Error('Supplier ID is required');
+    }
+
+    const response = await this.request(`/suppliers/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify({
+            ...supplier,
+            userId
+        })
+    });
+
+    return response.data || response;
+},
+
+async deleteSupplier(id) {
+    const userId = this.getCurrentUserId();
+
+    if (!userId) {
+        throw new Error('User not authenticated');
+    }
+
+    if (!id) {
+        throw new Error('Supplier ID is required');
+    }
+
+    const response = await this.request(`/suppliers/${id}`, {
+        method: 'DELETE'
+    });
+
+    return response.data || response;
+}, 
 
 async getTransactions() {
 
@@ -321,7 +377,7 @@ async createTransaction(transaction) {
         throw new Error('User not authenticated');
     }
 
-    const response = await this.request('/inventory/low-stock', {
+    const response = await this.request('/products/low-stock', {
         method: 'GET'
     });
 
@@ -337,7 +393,7 @@ async getRecentReports() {
         throw new Error('User not authenticated');
     }
 
-    const response = await this.request('/inventory/summary', {
+    const response = await this.request('/products/summary', {
         method: 'GET'
     });
 
