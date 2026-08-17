@@ -115,10 +115,10 @@ async function handleRegister(event) {
         // Only redirect if registration was successful
         if (result && result.success === true) {
 
-            showToast(
-                'Registration successful! Redirecting to login...',
-                'success'
-            );
+          showToast(
+            'Registration successful!',
+            'success'
+          );
 
             setTimeout(() => {
                 window.location.href = 'login.html';

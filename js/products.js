@@ -611,36 +611,52 @@ function setupProductModal() {
     // FORM SUBMIT
     // ===============================
 
-  form.addEventListener('submit', async event => {
+form.addEventListener('submit', async event => {
     event.preventDefault();
 
     const id = document.getElementById('productId').value;
-    const productName = document.getElementById('productName').value.trim();
-    
-    // Get the TEXT values (names)
-    const categoryName = document.getElementById('productCategory').value.trim();
-    const supplierName = document.getElementById('productSupplier').value.trim();
-    
-    const price = document.getElementById('productPrice').value;
-    const stock = document.getElementById('productStock').value;
-    const lowStock = document.getElementById('productLowStock').value;
-    const description = document.getElementById('productDescription')?.value.trim() || null;
 
-    // ===============================
-    // FRONTEND VALIDATION
-    // ===============================
+    const productName =
+        document.getElementById('productName').value.trim();
+
+    const categoryId =
+        document.getElementById('productCategory').value;
+
+    const supplierSelect =
+        document.getElementById('productSupplier');
+
+    const supplierId =
+        supplierSelect.value;
+
+    const price =
+        document.getElementById('productPrice').value;
+
+    const stock =
+        document.getElementById('productStock').value;
+
+    const lowStock =
+        document.getElementById('productLowStock').value;
+
+    const description =
+        document.getElementById('productDescription')?.value.trim() || null;
+
+
+    // ==========================================
+    // VALIDATION
+    // ==========================================
+
     if (!productName) {
         showToast('Product name is required', 'error');
         return;
     }
 
-    if (!categoryName) {
-        showToast('Please enter a category', 'error');
+    if (!categoryId) {
+        showToast('Please select a category', 'error');
         return;
     }
 
-    if (!supplierName) {
-        showToast('Please enter a supplier', 'error');
+    if (!supplierId) {
+        showToast('Please select a supplier', 'error');
         return;
     }
 
@@ -649,13 +665,15 @@ function setupProductModal() {
         return;
     }
 
-    // ===============================
-    // PRODUCT DATA - SEND NAMES, NOT IDs
-    // ===============================
+
+    // ==========================================
+    // PRODUCT DATA
+    // ==========================================
+
     const productData = {
         product_name: productName,
-        category_name: categoryName,    // ← Send name instead of ID
-        supplier_name: supplierName,    // ← Send name instead of ID
+        category_id: Number(categoryId),
+        supplier_id: Number(supplierId),
         price: Number(price),
         quantity: Number(stock) || 0,
         minimum_stock: Number(lowStock) || 5,
@@ -664,22 +682,44 @@ function setupProductModal() {
 
     console.log('PRODUCT DATA TO API:', productData);
 
+
     try {
+
         if (id) {
-            // For update, you might need to handle differently
+
             await api.updateProduct(id, productData);
-            showToast('Product updated successfully!', 'success');
+
+            showToast(
+                'Product updated successfully!',
+                'success'
+            );
+
         } else {
+
             await api.createProduct(productData);
-            showToast('Product created successfully!', 'success');
+
+            showToast(
+                'Product created successfully!',
+                'success'
+            );
         }
 
         modal.classList.remove('active');
+
         await loadProducts();
 
     } catch (error) {
-        console.error('Product save error:', error);
-        showToast(error.message || 'Failed to save product', 'error');
+
+        console.error(
+            'Product save error:',
+            error
+        );
+
+        showToast(
+            error.message ||
+            'Failed to save product',
+            'error'
+        );
     }
 });
 
@@ -771,30 +811,78 @@ function setupRefreshButton() {
 // ============================================
 
 window.editProduct = async function(id) {
+
     try {
+
         const product = await api.getProduct(id);
 
         if (!product) {
-            showToast('Product not found', 'error');
+            showToast(
+                'Product not found',
+                'error'
+            );
             return;
         }
 
-        document.getElementById('modalTitle').textContent = 'Edit Product';
-        document.getElementById('productId').value = product.id;
+
+        // ==========================================
+        // MAKE SURE DROPDOWNS ARE LOADED
+        // ==========================================
+
+        await loadCategories();
+        await loadSuppliers();
+
+
+        // ==========================================
+        // MODAL TITLE
+        // ==========================================
+
+        document.getElementById('modalTitle').textContent =
+            'Edit Product';
+
+
+        // ==========================================
+        // PRODUCT ID
+        // ==========================================
+
+        document.getElementById('productId').value =
+            product.id;
+
+
+        // ==========================================
+        // PRODUCT NAME
+        // ==========================================
+
         document.getElementById('productName').value =
             product.product_name || '';
 
-        document.getElementById('productCategory').value =
-            product.category_name || '';
 
-        const supplierInput =
+        // ==========================================
+        // CATEGORY
+        // ==========================================
+
+        document.getElementById('productCategory').value =
+            String(product.category_id || '');
+
+
+        // ==========================================
+        // SUPPLIER
+        // ==========================================
+
+        const supplierSelect =
             document.getElementById('productSupplier');
 
-        supplierInput.value =
-            product.supplier_name || '';
+        supplierSelect.value =
+            String(product.supplier_id || '');
+
 
         // Supplier cannot be edited
-        supplierInput.disabled = true;
+        supplierSelect.disabled = true;
+
+
+        // ==========================================
+        // OTHER FIELDS
+        // ==========================================
 
         document.getElementById('productPrice').value =
             product.price || 0;
@@ -808,13 +896,25 @@ window.editProduct = async function(id) {
         document.getElementById('productDescription').value =
             product.description || '';
 
+
+        // ==========================================
+        // SHOW MODAL
+        // ==========================================
+
         document.getElementById('productModal')
             .classList.add('active');
 
+
     } catch (error) {
-        console.error('Edit product error:', error);
+
+        console.error(
+            'Edit product error:',
+            error
+        );
+
         showToast(
-            error.message || 'Failed to load product data',
+            error.message ||
+            'Failed to load product data',
             'error'
         );
     }

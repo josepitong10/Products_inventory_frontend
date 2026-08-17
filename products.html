@@ -29,11 +29,11 @@
             </a>
             <a href="inventory.html">
                 <span class="nav-icon">🔄</span>
-                <span>Inventory</span>
+                <span>Stock Transaction</span>
             </a>
             <a href="reports.html">
                 <span class="nav-icon">📈</span>
-                <span>Reports</span>
+                <span>Inventory</span>
             </a>
         </nav>
         <div class="sidebar-footer">
@@ -86,65 +86,102 @@
     </div>
 
     <!-- Product Modal -->
-    <div id="productModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="modalTitle">Add Product</h2>
-                <button class="modal-close">&times;</button>
-            </div>
-            <form id="productForm">
-                <input type="hidden" id="productId" />
-                <div class="form-group">
-                    <label for="productName">Product Name</label>
-                    <input type="text" id="productName" required />
-               </div>
-
-<div class="form-group">
-    <label for="productCategory">Category</label>
-<input
-    type="text"
-    id="productCategory"
-    placeholder="Enter category"
-    required
-/>
-</div>
-                <div class="form-group">
-                    <label for="productPrice">Price</label>
-                    <input type="number" id="productPrice" step="0.01" required />
-                </div>
-                <div class="form-group">
-                    <label for="productStock">Stock Quantity</label>
-                    <input type="number" id="productStock" required />
-                </div>
-<div class="form-group">
-    <label for="productSupplier">Supplier</label>
-    <input
-        type="text"
-        id="productSupplier"
-        placeholder="Enter supplier"
-        required
-    />
-</div>
-                <div class="form-group">
-                    <label for="productLowStock">Low Stock Threshold</label>
-                    <input type="number" id="productLowStock" value="5" />
-                </div>
-
-                            <div class="form-group">
-              <label for="productDescription">Description</label>
-              <textarea
-            id="productDescription"
-            rows="3"
-            placeholder="Enter product description"
-        ></textarea>
-            </div>
-                <div class="modal-actions">
-                    <button type="button" class="btn btn-outline modal-close">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Save Product</button>
-                </div>
-            </form>
+    <!-- Product Modal -->
+<div id="productModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 id="modalTitle">Add Product</h2>
+            <button class="modal-close">&times;</button>
         </div>
+
+        <form id="productForm">
+            <input type="hidden" id="productId" />
+
+            <div class="form-group">
+                <label for="productName">Product Name</label>
+                <input
+                    type="text"
+                    id="productName"
+                    placeholder="Enter product name"
+                    required
+                />
+            </div>
+
+            <div class="form-group">
+                <label for="productCategory">Category</label>
+                <select id="productCategory" required>
+                    <option value="">Select a category</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="productSupplier">Supplier</label>
+                <select id="productSupplier" required>
+                    <option value="">Select a supplier</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="productPrice">Price</label>
+                <input
+                    type="number"
+                    id="productPrice"
+                    step="0.01"
+                    min="0"
+                    placeholder="Enter price"
+                    required
+                />
+            </div>
+
+            <div class="form-group">
+                <label for="productStock">Stock Quantity</label>
+                <input
+                    type="number"
+                    id="productStock"
+                    min="0"
+                    placeholder="Enter stock quantity"
+                    required
+                />
+            </div>
+
+            <div class="form-group">
+                <label for="productLowStock">Low Stock Threshold</label>
+                <input
+                    type="number"
+                    id="productLowStock"
+                    min="0"
+                    value="5"
+                    required
+                />
+            </div>
+
+            <div class="form-group">
+                <label for="productDescription">Description</label>
+                <textarea
+                    id="productDescription"
+                    rows="3"
+                    placeholder="Enter product description"
+                ></textarea>
+            </div>
+
+            <div class="modal-actions">
+                <button
+                    type="button"
+                    class="btn btn-outline modal-close"
+                >
+                    Cancel
+                </button>
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                >
+                    Save Product
+                </button>
+            </div>
+        </form>
     </div>
+</div>
 
     <script src="js/api.js"></script>
     <script src="js/auth.js"></script>
